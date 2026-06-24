@@ -1,1 +1,3 @@
 # Admins.net
+
+Binary distribution

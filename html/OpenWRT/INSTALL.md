@@ -44,7 +44,7 @@ opkg install /tmp/admins-net_0.1.7_x86_64.ipk
 
 ```bash
 mkdir -p /etc/apk/repositories.d
-echo "https://dl.admins.net/openwrt" > /etc/apk/repositories.d/adminsnet.list
+echo "https://dl.admins.net/OpenWRT" > /etc/apk/repositories.d/adminsnet.list
 apk update
 apk add admins-net
 ```

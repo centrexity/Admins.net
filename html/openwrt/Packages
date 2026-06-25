@@ -3,7 +3,7 @@ Version: 0.1.7
 Architecture: x86_64
 Installed-Size: 1430356
 Filename: admins-net_0.1.7_x86_64.ipk
-Size: 620940
-SHA256sum: a147d44e70cc17f032a3643385628192bbb514d9dba2be6d8e0ee9f1b9a70e4a
-Description: Admins.net Service (legacy)
+Size: 620944
+SHA256sum: e2808c6db0808b69eb4396fd40ba1448a309f4db3a0eefec75b5a4668e5d2050
+Description: Admins.net Service
 

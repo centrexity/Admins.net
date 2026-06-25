@@ -1,83 +1,80 @@
-# Admins.net – OpenWRT Packages
+# Admins.net OpenWRT Packages
 
-This directory contains pre-built packages for **OpenWRT**.
+This repo is structured so `apk` automatically looks in `x86_64/` when you point it at the root.
 
-- **Recommended**: `admins-net-0.1.7-r1.apk` (for OpenWRT 25.12 and newer)
-- **Legacy**: `admins-net_0.1.7_x86_64.ipk` (for older OpenWRT using opkg)
+**Single recommended URL:**
 
----
-
-## Quick Install (Modern OpenWRT 25.12+)
-
-```bash
-# Copy the package to your router
-scp admins-net-0.1.7-r1.apk root@192.168.1.1:/tmp/
-
-# Install (unsigned / custom package)
-apk add --allow-untrusted /tmp/admins-net-0.1.7-r1.apk
-
-# Enable and start the service
-/etc/init.d/admins.net enable
-/etc/init.d/admins.net start
-
-# Check status
-/etc/init.d/admins.net status
-logread | grep Admins.net
+```
+https://dl.admins.net/OpenWRT
 ```
 
-## Quick Install (Legacy OpenWRT)
+`apk` will automatically append `/x86_64/` when looking for the index and packages.
+
+## Setup (Modern OpenWRT)
 
 ```bash
-scp admins-net_0.1.7_x86_64.ipk root@192.168.1.1:/tmp/
-opkg install /tmp/admins-net_0.1.7_x86_64.ipk
-
-/etc/init.d/admins.net enable
-/etc/init.d/admins.net start
-```
-
-## Setting Up a Persistent Custom Repository
-
-### For modern OpenWRT (apk)
-
-1. Host this entire folder (`openwrt-repo/`) on a web server (nginx, Caddy, GitHub Pages, etc.).
-2. On the router:
-
-```bash
-mkdir -p /etc/apk/repositories.d
 echo "https://dl.admins.net/OpenWRT" > /etc/apk/repositories.d/adminsnet.list
 apk update
 apk add admins-net
 ```
 
-### For legacy OpenWRT (opkg)
+> **Note:** If you see "UNTRUSTED signature", either:
+> - Run with `--allow-untrusted`, or
+> - Set up signing keys (see section below)
+
+## Setting up Signing Keys (Recommended)
+
+The build script now automatically generates a signing key if one doesn't exist and includes the public key in this repository.
+
+**On your build machine:**
+- The script will create `~/.abuild/admins.net-*.rsa` if needed.
+- It copies the `.rsa.pub` file into this repo folder.
+
+**On each router (one time):**
 
 ```bash
-echo "src/gz adminsnet https://your.server.example.com/openwrt-repo" >> /etc/opkg/customfeeds.conf
+# Download and install the public key
+wget -O /etc/apk/keys/admins.net.rsa.pub \
+     https://dl.admins.net/OpenWRT/admins.net-*.rsa.pub
+
+# Or manually:
+# scp admins.net-XXXX.rsa.pub root@router:/etc/apk/keys/
+```
+
+After installing the key, you can use clean commands:
+
+```bash
+apk update
+apk add admins-net
+```
+
+## Setup (Legacy OpenWRT)
+
+```bash
+echo "src/gz adminsnet https://dl.admins.net/OpenWRT" >> /etc/opkg/customfeeds.conf
 opkg update
 opkg install admins-net
 ```
 
-## Service Management
+## One-shot Install
 
-| Command                        | Description                  |
-|--------------------------------|------------------------------|
-| `/etc/init.d/admins.net start`   | Start the service            |
-| `/etc/init.d/admins.net stop`    | Stop the service             |
-| `/etc/init.d/admins.net restart` | Restart                      |
-| `/etc/init.d/admins.net status`  | Show status                  |
-| `/etc/init.d/admins.net enable`  | Start on boot                |
-| `logread \| grep Admins.net`             | View logs                    |
+**Modern:**
+```bash
+scp x86_64/admins-net-0.1.7-r1-x86_64.apk root@router:/tmp/
+apk add --allow-untrusted /tmp/admins-net-0.1.7-r1-x86_64.apk
+/etc/init.d/admins.net enable && /etc/init.d/admins.net start
+```
 
-The service uses **procd** with automatic respawn on crash.
+**Legacy:**
+```bash
+scp admins-net_0.1.7_x86_64.ipk root@router:/tmp/
+opkg install /tmp/admins-net_0.1.7_x86_64.ipk
+```
 
-## Notes
+## Service Control
+```bash
+/etc/init.d/admins.net start|stop|restart|status|enable
+logread | grep Admins.net
+```
 
-- These packages are **unsigned**. Use `--allow-untrusted` (apk) or just `opkg install` for testing.
-- For production repos you can sign the packages and generate `APKINDEX.tar.gz` using `apk index`.
-- The binary is statically linked and should work on standard x86_64 OpenWRT builds.
-- Built on: 1782348045  
-  Version: 0.1.7
-
----
-
-**Source / Support**: https://admins.net
+Built: 1782353441 | Version: 0.1.7

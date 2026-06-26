@@ -60,4 +60,4 @@ opkg install admins-net
 logread | grep Admins.net
 ```
 
-Built: 1782512961 | Version: 0.1.7
+Built: 1782513925 | Version: 0.1.7

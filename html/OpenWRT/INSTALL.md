@@ -55,9 +55,9 @@ opkg install admins-net
 ## Service Control
 
 ```bash
-/etc/init.d/admins.net start|stop|restart|status
-/etc/init.d/admins.net enable
+/etc/init.d/admins_net start|stop|restart|status
+/etc/init.d/admins_net enable
 logread | grep Admins.net
 ```
 
-Built: 1782522766 | Version: 0.1.7
+Built: 1782524311 | Version: 0.1.7
